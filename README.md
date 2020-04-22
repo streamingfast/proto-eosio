@@ -10,10 +10,15 @@ generate the source files for your language.
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Issues and PR in this repo related strictly to the EOSIO protobuf definitions.
 
-Please make sure to update tests as appropriate.
+Report any protocol-specific issues in their
+[respective repositories](https://github.com/dfuse-io/dfuse#protocols)
+
+Please first refer to the general
+[dfuse contribution guide](https://github.com/dfuse-io/dfuse/blob/master/CONTRIBUTING.md),
+if you wish to contribute to this code base.
 
 ## License
 
-All `dfuse` components are generally **Apache 2.0** licensed. See [LICENSE](./LICENSE).
+[Apache 2.0](LICENSE)
