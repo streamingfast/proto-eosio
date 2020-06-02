@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package dfuse.eosio.eosdb.v1;
+package dfuse.eosio.trxdb.v1;
 
-option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/eosdb/v1;pbeosdb";
+option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/trxdb/v1;pbtrxdb";
 
 import "dfuse/eosio/codec/v1/codec.proto";
 import "google/protobuf/timestamp.proto";
