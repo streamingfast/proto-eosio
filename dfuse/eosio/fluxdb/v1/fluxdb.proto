@@ -23,6 +23,7 @@ service FluxDB {
 //	rpc GetMultiContractsTableRows(GetMultiContractsTableRowsRequest) returns (GetMultiContractsTableRowsResponse);
 }
 
+// Data part (probably will be moved to "dfuse" repository instead of being "eosio" specific since it's not!)
 message TabletRow {
 	string collection = 1;
 	string tablet_key = 2;
