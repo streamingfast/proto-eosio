@@ -64,7 +64,7 @@ message GetPermissionLinksResponse {
 	string up_to_block_id = 1;
 	uint64 up_to_block_num = 2;
 	string last_irreversible_block_id = 3;
-	uint64 last_irreversible_block_num = 4;`
+	uint64 last_irreversible_block_num = 4;
 	repeated LinkedPermission permissions = 5;
 }
 
