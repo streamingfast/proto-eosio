@@ -14,7 +14,7 @@ service FluxDB {
 	// Replaces /v0/state/table
 	rpc GetTableRows(GetTableRowsRequest) returns (stream TableRowResponse);
 	// Replaces /v0/state/table/row
-	rpc GetTableRow(GetTableRowRequest) returns (TableRowResponse);
+	rpc GetTableRow(GetTableRowRequest) returns (GetTableRowResponse);
 	// Replaces /v0/state/table_scopes
 	rpc GetTableScopes(GetTableScopesRequest) returns (stream TableScopeResponse);
 	// Replaces /v0/state/tables/scopes
@@ -22,6 +22,15 @@ service FluxDB {
 //	// Replaces /v0/state/tables/accounts  - WE'D DO THIS ONE LAST, OR NOT AT ALL. Token meta satisfies the need better.
 //	rpc GetMultiContractsTableRows(GetMultiContractsTableRowsRequest) returns (GetMultiContractsTableRowsResponse);
 }
+
+message TabletRow {
+	string collection = 1;
+	string tablet_key = 2;
+	string block_num_key = 3;
+	string prim_key = 4;
+	bytes payload = 5;
+}
+
 
 message GetABIRequest {
 	string contract = 1;
@@ -54,7 +63,7 @@ message GetPermissionLinksResponse {
 	string up_to_block_id = 1;
 	uint64 up_to_block_num = 2;
 	string last_irreversible_block_id = 3;
-	uint64 last_irreversible_block_num = 4;
+	uint64 last_irreversible_block_num = 4;`
 	repeated LinkedPermission permissions = 5;
 }
 
@@ -68,38 +77,39 @@ message GetTableRowsRequest {
 	uint64 block_num = 1;
 	string key_type = 2;
 	bool to_json = 3;
-	bool with_abi = 4;
-	bool with_block_num = 5;
-	bool   irreversible_only = 6;
-	string contract = 7;
-	string table = 8;
-	string scope = 9;
+	bool with_block_num = 4;
+	bool   irreversible_only = 5;
+	string contract = 6;
+	string table = 7;
+	string scope = 8;
 }
+
 message	TableRowResponse {
 	string key = 1;
 	bytes data = 2;
 	string json = 3;
 	string payer = 4;
 	uint64 block_number = 5;
-
-	// currently this is repeated per TableRowResponse
-	string up_to_block_id = 10;
-	uint64 up_to_block_num = 11;
-	string last_irreversible_block_id = 12;
-	uint64 last_irreversible_block_num = 13;
 }
 
 message GetTableRowRequest {
 	uint64 block_num = 1;
 	string key_type = 2;
 	bool to_json = 3;
-	bool with_abi = 4;
-	bool with_block_num = 5;
-	bool   irreversible_only = 6;
-	string contract = 7;
-	string table = 8;
-	string scope = 9;
-	string primary_key = 10;
+	bool with_block_num = 4;
+	bool   irreversible_only = 5;
+	string contract = 6;
+	string table = 7;
+	string scope = 8;
+	string primary_key = 9;
+}
+
+message GetTableRowResponse {
+	string up_to_block_id = 1;
+	uint64 up_to_block_num = 2;
+	string last_irreversible_block_id = 3;
+	uint64 last_irreversible_block_num = 4;
+	TableRowResponse row = 5;
 }
 
 message GetTableScopesRequest  {
@@ -124,6 +134,4 @@ message GetMultiScopesTableRowsRequest {
 message TableRowsScopeResponse {
 	string scope = 1;
 	repeated TableRowResponse row = 4;
-
-
 }
