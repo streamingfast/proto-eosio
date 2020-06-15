@@ -21,6 +21,15 @@ service State {
 	rpc GetMultiScopesTableRows(GetMultiScopesTableRowsRequest) returns (stream TableRowsScopeResponse);
 	// Replaces /v0/state/tables/accounts
 	rpc GetMultiContractsTableRows(GetMultiContractsTableRowsRequest) returns (stream TableRowsContractResponse);
+
+	// New gRPC only calls
+	rpc GetCode(GetCodeRequest) returns (GetCodeResponse);
+	rpc StreamContracts(StreamContractsRequest) returns (stream ContractResponse);
+}
+
+message BlockRef {
+	uint64 num = 1;
+	string id = 2;
 }
 
 message GetABIRequest {
@@ -33,6 +42,26 @@ message GetABIResponse {
 	uint64 block_num = 1;
 	bytes raw_abi = 2;
 	string json_abi = 3;
+}
+
+
+message GetCodeRequest {
+	string contract = 1;
+	uint64 block_num = 2;
+}
+
+message GetCodeResponse {
+	uint64 block_num = 1;
+	bytes raw_code = 2;
+}
+
+message StreamContractsRequest  {
+	uint64 block_num = 1;
+}
+
+message ContractResponse {
+	uint64 block_num = 1;
+	string contract = 2;
 }
 
 message GetKeyAccountsRequest {
@@ -51,11 +80,9 @@ message GetPermissionLinksRequest {
 }
 
 message GetPermissionLinksResponse {
-	string up_to_block_id = 1;
-	uint64 up_to_block_num = 2;
-	string last_irreversible_block_id = 3;
-	uint64 last_irreversible_block_num = 4;
-	repeated LinkedPermission permissions = 5;
+	BlockRef up_to_block = 1;
+	BlockRef last_irreversible_block = 2;
+	repeated LinkedPermission permissions = 3;
 }
 
 message LinkedPermission {
@@ -96,11 +123,9 @@ message GetTableRowRequest {
 }
 
 message GetTableRowResponse {
-	string up_to_block_id = 1;
-	uint64 up_to_block_num = 2;
-	string last_irreversible_block_id = 3;
-	uint64 last_irreversible_block_num = 4;
-	TableRowResponse row = 5;
+	BlockRef up_to_block = 1;
+	BlockRef last_irreversible_block = 2;
+	TableRowResponse row = 3;
 }
 
 message GetTableScopesRequest  {
