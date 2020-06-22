@@ -24,6 +24,7 @@ service State {
 
 	// New gRPC only calls
 	rpc GetCode(GetCodeRequest) returns (GetCodeResponse);
+	rpc StreamAccounts(StreamAccountsRequest) returns (stream AccountResponse);
 	rpc StreamContracts(StreamContractsRequest) returns (stream ContractResponse);
 }
 
@@ -62,6 +63,15 @@ message StreamContractsRequest  {
 message ContractResponse {
 	uint64 block_num = 1;
 	string contract = 2;
+}
+
+message StreamAccountsRequest  {
+	uint64 block_num = 1;
+}
+
+message AccountResponse {
+	uint64 block_num = 1;
+	string account = 2;
 }
 
 message GetKeyAccountsRequest {
@@ -169,14 +179,4 @@ message TableRowsScopeResponse {
 message TableRowsContractResponse {
 	string contract = 1;
 	repeated TableRowResponse row = 4;
-}
-
-// Data part (probably will be moved to "dfuse" repository instead of being "eosio" specific since it's not!)
-
-message TabletRow {
-	string collection = 1;
-	string tablet_key = 2;
-	string block_num_key = 3;
-	string prim_key = 4;
-	bytes payload = 5;
 }
