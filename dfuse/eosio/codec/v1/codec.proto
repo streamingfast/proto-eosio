@@ -649,7 +649,16 @@ message PermOp {
 }
 
 message PermissionObject {
+  // Id represents the EOSIO internal id of this permission object.
+  uint64 id = 10;
+
+  // ParentId represents the EOSIO internal id of the parent's of this permission object.
+  uint64 parent_id = 11;
+
+  // Owner is the account for which this permission was set
   string owner = 1;
+
+  // Name is the permission's name this permission object is known as.
   string name = 2;
   google.protobuf.Timestamp last_updated = 3;
   Authority authority = 4;
