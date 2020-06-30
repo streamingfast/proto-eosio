@@ -72,6 +72,8 @@ message StreamAccountsRequest  {
 message AccountResponse {
 	uint64 block_num = 1;
 	string account = 2;
+	repeated dfuse.eosio.codec.v1.PermissionObject permissions = 3;
+	repeated LinkedPermission linked_permissions = 4;
 }
 
 message GetKeyAccountsRequest {
