@@ -27,18 +27,54 @@ message Block {
   bool validated = 18;
 
   repeated RlimitOp rlimit_ops = 19;
-  // TODO: rename to ImplicitTransactionOps  - Check with @Matt
   repeated TrxOp implicit_transaction_ops = 20;
-  repeated TransactionTrace transaction_traces = 21;
-  uint32 transaction_trace_count = 23;
 
-  // Number of actions that were at the root of transactions included in this
-  // block, not including the input actions of the deferred transactions
-  // included.
-  uint32 execute_input_action_count = 24;
+  // The unfiltered transaction traces in this block when NO filtering has been applied,
+  // (i.e. `filtering_applied = false`). When filtering has been applied on this block,
+  // (i.e. `filtering_applied = true`), this field will be set to `nil` and instead, the
+  // `filtered_transaction_traces` will be populated with only filtered transactions.
+  //
+  // Use the helper getter method `TransactionTraces()` to automatically the correct
+  // field (`unfiltered_transaction_traces` when `filtering_applied == false` and
+  // `filtered_transaction_traces` when `filtering_applied == true`).
+  repeated TransactionTrace unfiltered_transaction_traces = 21;
 
-  // Number of actions that were successfully executed within this block
-  uint32 executed_total_action_count = 25;
+  // The filtered transaction traces in this block when filtering has been applied,
+  // (i.e. `filtering_applied = true`). This will be only the transaction trace
+  // that matched the include filter CEL expression and did NOT match the exclude
+  // filter CEL expression.
+  //
+  // Use the helper getter method `TransactionTraces()` to automatically the correct
+  // field (`unfiltered_transaction_traces` when `filtering_applied == false` and
+  // `filtered_transaction_traces` when `filtering_applied == true`).
+  repeated TransactionTrace filtered_transaction_traces = 46;
+
+  // Number of transaction trace executed within this block when no filtering
+  // is applied (`filtering_applied == false`).
+  uint32 unfiltered_transaction_trace_count = 23;
+
+  // Number of transaction trace that were successfully executed within this block that are found in
+  // the `filtered_transaction_traces` array. This field is populated only when the flag
+  // `filtering_applied` is `true`.
+  uint32 filtered_transaction_trace_count = 43;
+
+  // Number of top-level actions that were successfully executed within this block when no filtering
+  // is applied (`filtering_applied == false`).
+  uint32 unfiltered_executed_input_action_count = 24;
+
+  // Number of top-level actions that were successfully executed within this block that are found in
+  // the `filtered_transaction_traces` array. This field is populated only when the flag
+  // `filtering_applied` is `true`.
+  uint32 filtered_executed_input_action_count = 44;
+
+  // Number of actions that were successfully executed within this block when no filtering
+  // is applied (`filtering_applied == false`).
+  uint32 unfiltered_executed_total_action_count = 25;
+
+  // Number of actions that were successfully executed within this block that are found in
+  // the `filtered_transaction_traces` array. This field is populated only when the flag
+  // `filtering_applied` is `true`.
+  uint32 filtered_executed_total_action_count = 45;
 
   // Reserved 26 to 29
 
@@ -76,6 +112,28 @@ message Block {
   // multiple keys, each with their own weight and the threshold required to
   // accept the block signature.
   ProducerAuthoritySchedule active_schedule_v2 = 31;
+
+  // Wheter or not a filtering process was run on this block. The filtering process sets to nil
+  // the `unfiltered_transaction_traces` to `nil` and populate the `filtered_transaction_traces`
+  // according to the `filtering_include_filter_expr` and `filtering_exclude_filter_expr` CEL
+  // expressions. A transaction will be present in the `filtered_transaction_traces` array if
+  // it matched the `filtering_include_filter_expr` and did *NOT* match the `filtering_exclude_filter_expr`.
+  //
+  // Moreover, each matching action that brought the transaction to be in `filtered_transaction_traces`
+  // array will have a `filtering_matched` flag set on it to broadcast the fact that this action
+  // match the inclusion/exclusion list.
+  //
+  // This flag controls all `filtered_*` and `unfiltered_*` elements on the Block structure and on
+  // substructures if present.
+  bool filtering_applied = 40;
+
+  // The CEL filter expression used to include transaction in `filtered_transaction_traces` array, works
+  // in combination with `filtering_exclude_filter_expr` value.
+  string filtering_include_filter_expr = 41;
+
+  // The CEL filter expression used to exclude transaction in `filtered_transaction_traces` array, works
+  // in combination with `filtering_include_filter_expr` value.
+  string filtering_exclude_filter_expr = 42;
 }
 
 // BlockWithRefs is a lightweight block, with traces and transactions
@@ -344,7 +402,7 @@ message TransactionTrace {
   // Reference to the block number in which this transaction was executed.
   uint64 block_num = 2;
 
-  // Index within block's execution traces
+  // Index within block's unfiltered execution traces
   uint64 index = 26;
 
   // Reference to the block time this transaction was executed in
@@ -438,6 +496,11 @@ message ActionTrace {
   uint32 creator_action_ordinal = 17;
   uint32 closest_unnotified_ancestor_action_ordinal = 18;
   uint32 execution_index = 19;
+
+  // Whether this action trace was a successful match, present only when filtering was applied on block. This
+  // will be `true` if the Block `filtering_applied` is `true`, if the include CEL filter matched and
+  // if the exclude CEL filter did NOT match.
+  bool filtering_matched = 30;
 }
 
 message ActionReceipt {
