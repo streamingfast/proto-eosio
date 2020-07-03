@@ -12,10 +12,7 @@ message Block {
 
   BlockHeader header = 4;
   string producer_signature = 5;
-  repeated TransactionReceipt transactions = 6;
-  uint32 transaction_count = 22;
   repeated Extension block_extensions = 7;
-
   uint32 dpos_proposed_irreversible_blocknum = 8;
   uint32 dpos_irreversible_blocknum = 9;
   BlockRootMerkle blockroot_merkle = 11;
@@ -25,17 +22,65 @@ message Block {
   PendingProducerSchedule pending_schedule = 16;
   ActivatedProtocolFeatures activated_protocol_features = 17;
   bool validated = 18;
-
   repeated RlimitOp rlimit_ops = 19;
-  repeated TrxOp implicit_transaction_ops = 20;
+
+  // The unfiltered transactions in this block when NO filtering has been applied,
+  // (i.e. `filtering_applied = false`). When filtering has been applied on this block,
+  // (i.e. `filtering_applied = true`), this field will be set to `nil` and instead, the
+  // `filtered_transactions` will be populated with only filtered transactions.
+  //
+  // Use the helper getter method `Transactions()` to automatically pick the correct
+  // field to use (`unfiltered_transactions` when `filtering_applied == false` and
+  // `filtered_transactions` when `filtering_applied == true`).
+  repeated TransactionReceipt unfiltered_transactions = 6;
+
+  // The filtered transactions in this block when filtering has been applied,
+  // (i.e. `filtering_applied = true`). This will be only the transactions
+  // that matched the include filter CEL expression and did NOT match the exclude
+  // filter CEL expression.
+  //
+  // Use the helper getter method `Transactions()` to automatically the correct
+  // field (`unfiltered_transaction` when `filtering_applied == false` and
+  // `filtered_transactions` when `filtering_applied == true`).
+  repeated TransactionReceipt filtered_transactions = 47;
+
+  // Number of transaction executed within this block when no filtering
+  // is applied (`filtering_applied == false`).
+  uint32 unfiltered_transaction_count = 22;
+
+  // Number of transaction that were successfully executed within this block that are found in
+  // the `filtered_transactions` array. This field is populated only when the flag
+  // `filtering_applied` is `true`.
+  uint32 filtered_transaction_count = 48;
+
+  // The unfiltered implicit transaction ops in this block when NO filtering has been applied,
+  // (i.e. `filtering_applied = false`). When filtering has been applied on this block,
+  // (i.e. `filtering_applied = true`), this field will be set to `nil` and instead, the
+  // `filtered_implicit_transaction_ops` will be populated with only filtered implicit
+  // transaction ops.
+  //
+  // Use the helper getter method `ImplicitTransactionOps()` to automatically pick the correct
+  // field to use (`unfiltered_implicit_transaction_ops` when `filtering_applied == false` and
+  // `filtered_implicit_transaction_ops` when `filtering_applied == true`).
+  repeated TrxOp unfiltered_implicit_transaction_ops = 20;
+
+  // The filtered implicit transaction ops in this block when filtering has been applied,
+  // (i.e. `filtering_applied = true`). This will be only the implicit transaction ops
+  // that matched the include filter CEL expression and did NOT match the exclude
+  // filter CEL expression.
+  //
+  // Use the helper getter method `ImplicitTransactionOps()` to automatically the correct
+  // field (`unfiltered_implicit_transaction_ops` when `filtering_applied == false` and
+  // `filtered_implicit_transaction_ops` when `filtering_applied == true`).
+  repeated TrxOp filtered_implicit_transaction_ops = 49;
 
   // The unfiltered transaction traces in this block when NO filtering has been applied,
   // (i.e. `filtering_applied = false`). When filtering has been applied on this block,
   // (i.e. `filtering_applied = true`), this field will be set to `nil` and instead, the
   // `filtered_transaction_traces` will be populated with only filtered transactions.
   //
-  // Use the helper getter method `TransactionTraces()` to automatically the correct
-  // field (`unfiltered_transaction_traces` when `filtering_applied == false` and
+  // Use the helper getter method `TransactionTraces()` to automatically pick the correct
+  // field to use (`unfiltered_transaction_traces` when `filtering_applied == false` and
   // `filtered_transaction_traces` when `filtering_applied == true`).
   repeated TransactionTrace unfiltered_transaction_traces = 21;
 
@@ -44,8 +89,8 @@ message Block {
   // that matched the include filter CEL expression and did NOT match the exclude
   // filter CEL expression.
   //
-  // Use the helper getter method `TransactionTraces()` to automatically the correct
-  // field (`unfiltered_transaction_traces` when `filtering_applied == false` and
+  // Use the helper getter method `TransactionTraces()` to automatically pick the correct
+  // field to use (`unfiltered_transaction_traces` when `filtering_applied == false` and
   // `filtered_transaction_traces` when `filtering_applied == true`).
   repeated TransactionTrace filtered_transaction_traces = 46;
 
