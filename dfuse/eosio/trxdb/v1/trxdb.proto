@@ -57,12 +57,14 @@ message AccountRow {
   google.protobuf.Timestamp block_time = 5;
 }
 
-enum IndexableRow {
-  INDEXABLE_ROW_ACCOUNT = 0;
-  INDEXABLE_ROW_BLOCK = 1;
-  INDEXABLE_ROW_DTRX = 2;
-  INDEXABLE_ROW_IMPLICIT_TRX = 3;
-  INDEXABLE_ROW_TRX = 4;
-  INDEXABLE_ROW_TRX_TRACE = 5;
-  INDEXABLE_ROW_TIMELINE = 6;
+// IndexableCategory represents the valid catgory that can be read/write by
+// the TrxDB instance.
+//
+// Those enum are used mainly throughout the code to determine what needs to
+// be written to the database as well as where to read each component.
+enum IndexableCategory {
+  INDEXABLE_CATEGORY_ACCOUNT = 0;
+  INDEXABLE_CATEGORY_BLOCK = 1;
+  INDEXABLE_CATEGORY_TRANSACTION = 2;
+  INDEXABLE_CATEGORY_TIMELINE = 3;
 }
