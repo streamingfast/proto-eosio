@@ -4,6 +4,8 @@ package dfuse.eosio.fluxdb.v1;
 
 option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/fluxdb/v1;pbfluxdb";
 
+import "dfuse/eosio/codec/v1/codec.proto";
+
 service State {
 	// Replaces /v0/state/abi
 	rpc GetABI(GetABIRequest) returns (GetABIResponse);
