@@ -9,6 +9,7 @@ import "google/protobuf/timestamp.proto";
 message Block {
   string id = 1;
   uint32 number = 2;
+  uint32 version = 3;
 
   BlockHeader header = 4;
   string producer_signature = 5;
