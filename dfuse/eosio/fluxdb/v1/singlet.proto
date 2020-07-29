@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package dfuse.eosio.fluxdb.v1;
+
+option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/fluxdb/v1;pbfluxdb";
+
+message ContractABIEntry {
+  bytes raw_abi = 1;
+}

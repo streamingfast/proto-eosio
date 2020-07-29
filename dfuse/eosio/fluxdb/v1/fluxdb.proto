@@ -4,7 +4,7 @@ package dfuse.eosio.fluxdb.v1;
 
 option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/fluxdb/v1;pbfluxdb";
 
-import "dfuse/eosio/codec/v1/codec.proto";
+import "dfuse/bstream/v1/bstream.proto";
 
 service State {
 	// Replaces /v0/state/abi
@@ -23,16 +23,6 @@ service State {
 	rpc GetMultiScopesTableRows(GetMultiScopesTableRowsRequest) returns (stream TableRowsScopeResponse);
 	// Replaces /v0/state/tables/accounts
 	rpc GetMultiContractsTableRows(GetMultiContractsTableRowsRequest) returns (stream TableRowsContractResponse);
-
-	// New gRPC only calls
-	rpc GetCode(GetCodeRequest) returns (GetCodeResponse);
-	rpc StreamAccounts(StreamAccountsRequest) returns (stream AccountResponse);
-	rpc StreamContracts(StreamContractsRequest) returns (stream ContractResponse);
-}
-
-message BlockRef {
-	uint64 num = 1;
-	string id = 2;
 }
 
 message GetABIRequest {
@@ -45,37 +35,6 @@ message GetABIResponse {
 	uint64 block_num = 1;
 	bytes raw_abi = 2;
 	string json_abi = 3;
-}
-
-
-message GetCodeRequest {
-	string contract = 1;
-	uint64 block_num = 2;
-}
-
-message GetCodeResponse {
-	uint64 block_num = 1;
-	bytes raw_code = 2;
-}
-
-message StreamContractsRequest  {
-	uint64 block_num = 1;
-}
-
-message ContractResponse {
-	uint64 block_num = 1;
-	string contract = 2;
-}
-
-message StreamAccountsRequest  {
-	uint64 block_num = 1;
-}
-
-message AccountResponse {
-	uint64 block_num = 1;
-	string account = 2;
-	repeated dfuse.eosio.codec.v1.PermissionObject permissions = 3;
-	repeated LinkedPermission linked_permissions = 4;
 }
 
 message GetKeyAccountsRequest {
@@ -94,8 +53,8 @@ message GetPermissionLinksRequest {
 }
 
 message GetPermissionLinksResponse {
-	BlockRef up_to_block = 1;
-	BlockRef last_irreversible_block = 2;
+	dfuse.bstream.v1.BlockRef up_to_block = 1;
+	dfuse.bstream.v1.BlockRef last_irreversible_block = 2;
 	repeated LinkedPermission permissions = 3;
 }
 
@@ -137,8 +96,8 @@ message GetTableRowRequest {
 }
 
 message GetTableRowResponse {
-	BlockRef up_to_block = 1;
-	BlockRef last_irreversible_block = 2;
+	dfuse.bstream.v1.BlockRef up_to_block = 1;
+	dfuse.bstream.v1.BlockRef last_irreversible_block = 2;
 	TableRowResponse row = 3;
 }
 
