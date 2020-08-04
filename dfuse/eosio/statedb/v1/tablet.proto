@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package dfuse.eosio.statedb.v1;
+
+option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/statedb/v1;pbstatedb";
+
+message AuthLinkValue {
+  uint64 permission = 1;
+}
+
+message ContractStateValue {
+  uint64 payer = 1;
+  bytes data = 2;
+}
+
+message ContractTableScopeValue {
+  uint64 payer = 1;
+}
+
+// KeyAccountValue is actual empty and the bool field is there mainly to permit a future
+// extension where we could add more fields in there.
+message KeyAccountValue {
+  bool present = 1;
+}

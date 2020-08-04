@@ -1,28 +1,35 @@
 syntax = "proto3";
 
-package dfuse.eosio.fluxdb.v1;
+package dfuse.eosio.statedb.v1;
 
-option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/fluxdb/v1;pbfluxdb";
+option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/statedb/v1;pbstatedb";
 
 import "dfuse/bstream/v1/bstream.proto";
 
 service State {
 	// Replaces /v0/state/abi
 	rpc GetABI(GetABIRequest) returns (GetABIResponse);
+
 	// Replaces /v0/state/key_accounts
 	rpc GetKeyAccounts(GetKeyAccountsRequest) returns (GetKeyAccountsResponse);
+
 	// Replaces /v0/state/permission_links
 	rpc GetPermissionLinks(GetPermissionLinksRequest) returns (GetPermissionLinksResponse);
-	// Replaces /v0/state/table
-	rpc GetTableRows(GetTableRowsRequest) returns (stream TableRowResponse);
+
 	// Replaces /v0/state/table/row
 	rpc GetTableRow(GetTableRowRequest) returns (GetTableRowResponse);
+
+	// Replaces /v0/state/table
+	rpc StreamTableRows(StreamTableRowsRequest) returns (stream TableRowResponse);
+
 	// Replaces /v0/state/table_scopes
-	rpc GetTableScopes(GetTableScopesRequest) returns (stream TableScopeResponse);
+	rpc StreamTableScopes(StreamTableScopesRequest) returns (stream TableScopeResponse);
+
 	// Replaces /v0/state/tables/scopes
-	rpc GetMultiScopesTableRows(GetMultiScopesTableRowsRequest) returns (stream TableRowsScopeResponse);
+	rpc StreamMultiScopesTableRows(StreamMultiScopesTableRowsRequest) returns (stream TableRowsScopeResponse);
+
 	// Replaces /v0/state/tables/accounts
-	rpc GetMultiContractsTableRows(GetMultiContractsTableRowsRequest) returns (stream TableRowsContractResponse);
+	rpc StreamMultiContractsTableRows(StreamMultiContractsTableRowsRequest) returns (stream TableRowsContractResponse);
 }
 
 message GetABIRequest {
@@ -64,25 +71,6 @@ message LinkedPermission {
 	string permission_name = 3;
 }
 
-message GetTableRowsRequest {
-	uint64 block_num = 1;
-	string key_type = 2;
-	bool to_json = 3;
-	bool with_block_num = 4;
-	bool irreversible_only = 5;
-	string contract = 6;
-	string table = 7;
-	string scope = 8;
-}
-
-message	TableRowResponse {
-	string key = 1;
-	bytes data = 2;
-	string json = 3;
-	string payer = 4;
-	uint64 block_number = 5;
-}
-
 message GetTableRowRequest {
 	uint64 block_num = 1;
 	string key_type = 2;
@@ -101,7 +89,26 @@ message GetTableRowResponse {
 	TableRowResponse row = 3;
 }
 
-message GetTableScopesRequest  {
+message StreamTableRowsRequest {
+	uint64 block_num = 1;
+	string key_type = 2;
+	bool to_json = 3;
+	bool with_block_num = 4;
+	bool irreversible_only = 5;
+	string contract = 6;
+	string table = 7;
+	string scope = 8;
+}
+
+message	TableRowResponse {
+	string key = 1;
+	bytes data = 2;
+	string json = 3;
+	string payer = 4;
+	uint64 block_number = 5;
+}
+
+message StreamTableScopesRequest  {
 	uint64 block_num = 1;
 	string contract = 2;
 	string table = 3;
@@ -112,7 +119,7 @@ message TableScopeResponse {
 	string scope = 2;
 }
 
-message GetMultiScopesTableRowsRequest {
+message StreamMultiScopesTableRowsRequest {
 	uint64 block_num = 1;
 	string contract = 2;
 	string table = 3;
@@ -123,7 +130,7 @@ message GetMultiScopesTableRowsRequest {
 	repeated string scopes = 8;
 }
 
-message GetMultiContractsTableRowsRequest {
+message StreamMultiContractsTableRowsRequest {
 	uint64 block_num = 1;
 	string scope = 2;
 	string table = 3;
@@ -136,10 +143,10 @@ message GetMultiContractsTableRowsRequest {
 
 message TableRowsScopeResponse {
 	string scope = 1;
-	repeated TableRowResponse row = 4;
+	repeated TableRowResponse rows = 4;
 }
 
 message TableRowsContractResponse {
 	string contract = 1;
-	repeated TableRowResponse row = 4;
+	repeated TableRowResponse rows = 4;
 }
