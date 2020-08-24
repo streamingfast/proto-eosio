@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package dfuse.eosio.accounthist.v1;
 
+option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/accounthist/v1;pbaccounthist";
+
 import "dfuse/eosio/codec/v1/codec.proto";
 
 service AccountHistory {
