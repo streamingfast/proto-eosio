@@ -180,6 +180,10 @@ message Block {
   // The CEL filter expression used to exclude transaction in `filtered_transaction_traces` array, works
   // in combination with `filtering_include_filter_expr` value.
   string filtering_exclude_filter_expr = 42;
+
+  // The CEL filter expression used to include system actions, required by some systems, works
+  // in combination with the two other filters above.
+  string filtering_system_actions_include_filter_expr = 43;
 }
 
 // BlockWithRefs is a lightweight block, with traces and transactions
@@ -547,6 +551,7 @@ message ActionTrace {
   // will be `true` if the Block `filtering_applied` is `true`, if the include CEL filter matched and
   // if the exclude CEL filter did NOT match.
   bool filtering_matched = 30;
+  bool filtering_matched_system_action_filter = 31;
 }
 
 message ActionReceipt {
