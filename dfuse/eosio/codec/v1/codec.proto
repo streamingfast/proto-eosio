@@ -183,7 +183,7 @@ message Block {
 
   // The CEL filter expression used to include system actions, required by some systems, works
   // in combination with the two other filters above.
-  string filtering_system_actions_include_filter_expr = 43;
+  string filtering_system_actions_include_filter_expr = 50;
 }
 
 // BlockWithRefs is a lightweight block, with traces and transactions
