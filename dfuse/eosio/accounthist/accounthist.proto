@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package dfuse.eosio.accounthist.v1;
+
+import "dfuse/eosio/codec/v1/codec.proto";
+
+service AccountHistory {
+	// Replaces /v0/state/abi
+	rpc ForAccount(GetHistoryForAccountRequest) returns (stream AccountData);
+}
+
+message GetHistoryForAccountRequest {
+  string account = 1;
+  string exclusive_upper_bound_key = 2;
+  uint32 count = 3;
+}
+
+message AccountData {
+  bytes key = 1;  // Not serialized to storage
+  string transaction_id = 2;
+
+  uint64 sequence_number = 3;
+  dfuse.eosio.codec.v1.ActionTrace action_trace = 4;
+
+  uint32 block_num = 10;
+  string block_id = 11;
+  google.protobuf.Timestamp block_time = 12;
+
+}
