@@ -7,7 +7,7 @@ option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/accounthist/
 import "dfuse/eosio/codec/v1/codec.proto";
 
 service AccountHistory {
-	rpc ForAccount(GetHistoryForAccountRequest) returns (stream AccountData);
+	rpc ForAccount(GetHistoryForAccountRequest) returns (stream ActionData);
 }
 
 message GetHistoryForAccountRequest {
@@ -17,7 +17,7 @@ message GetHistoryForAccountRequest {
   uint32 count = 3;
 }
 
-message AccountData {
+message ActionData {
   bytes key = 1;  // Not serialized to storage
   uint64 sequence_number = 2;
   dfuse.eosio.codec.v1.ActionTrace action_trace = 3;
