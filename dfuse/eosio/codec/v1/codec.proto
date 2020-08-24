@@ -551,6 +551,10 @@ message ActionTrace {
   // will be `true` if the Block `filtering_applied` is `true`, if the include CEL filter matched and
   // if the exclude CEL filter did NOT match.
   bool filtering_matched = 30;
+
+  // Whether this action trace was a successful system match, present only when filtering was applied on block.
+  // This will be `true` if the Block `filtering_applied` is `true`, if the system actions include CEL filter
+  // matched, supersedes any exclude CEL filter.
   bool filtering_matched_system_action_filter = 31;
 }
 
