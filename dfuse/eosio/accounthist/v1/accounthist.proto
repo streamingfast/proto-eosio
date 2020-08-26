@@ -7,10 +7,10 @@ option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/accounthist/
 import "dfuse/eosio/codec/v1/codec.proto";
 
 service AccountHistory {
-	rpc ForAccount(GetHistoryForAccountRequest) returns (stream ActionData);
+  rpc GetActions(GetActionsRequest) returns (stream ActionData);
 }
 
-message GetHistoryForAccountRequest {
+message GetActionsRequest {
   string account = 1;
 
   bytes exclusive_upper_bound_key = 2;
