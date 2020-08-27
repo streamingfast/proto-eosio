@@ -7,18 +7,32 @@ option go_package = "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/accounthist/
 import "dfuse/eosio/codec/v1/codec.proto";
 
 service AccountHistory {
-  rpc GetActions(GetActionsRequest) returns (stream ActionData);
+  rpc GetActions(GetActionsRequest) returns (stream ActionResponse);
 }
 
 message GetActionsRequest {
-  string account = 1;
-
-  bytes exclusive_upper_bound_key = 2;
-  uint32 count = 3;
+  uint64 account = 1;
+  uint32 limit = 2;
+  Cursor cursor = 3;
 }
 
-message ActionData {
-  bytes key = 1;  // Not serialized to storage
-  uint64 sequence_number = 2;
-  dfuse.eosio.codec.v1.ActionTrace action_trace = 3;
+message ActionResponse {
+  Cursor cursor = 1;
+
+  dfuse.eosio.codec.v1.ActionTrace action_trace = 2;
+}
+
+message ActionRow {
+  uint32 version = 1;
+  dfuse.eosio.codec.v1.ActionTrace action_trace = 2;
+}
+
+message Cursor {
+  uint32 version = 1;
+  uint32 magic = 2;  // fixed at 4374 = acth in l33t = account history
+
+  uint64 account = 3;
+
+  uint32 shard_num = 4;
+  uint64 sequence_number = 5;
 }
