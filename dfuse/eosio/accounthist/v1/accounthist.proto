@@ -25,6 +25,18 @@ message ActionResponse {
 message ActionRow {
   uint32 version = 1;
   dfuse.eosio.codec.v1.ActionTrace action_trace = 2;
+  uint64 last_deleted_seq = 3;
+}
+
+message ShardCheckpoint {
+  uint64 initial_start_block = 1;
+  uint64 target_stop_block = 2; // exclusive
+  uint64 last_written_block_num = 3;
+  string last_written_block_id = 4;
+}
+
+message ActionRowAppend {
+  uint64 last_deleted_seq = 3; // Align with `ActionRow.last_deleted_seq`
 }
 
 message Cursor {
