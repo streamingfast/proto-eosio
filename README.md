@@ -1,6 +1,6 @@
-# `dfuse` for EOSIO protobuf definitions
+# EOSIO on StreamingFast protobuf definitions
 
-This repository holds protocol buffer definition files (`.proto`) for dfuse for EOSIO products.
+This repository holds protocol buffer definition files (`.proto`) for EOSIO on StreamingFast products.
 
 ## Usage
 
@@ -13,10 +13,10 @@ generate the source files for your language.
 Issues and PR in this repo related strictly to the EOSIO protobuf definitions.
 
 Report any protocol-specific issues in their
-[respective repositories](https://github.com/dfuse-io/dfuse#protocols)
+[respective repositories](https://github.com/streamingfast/streamingfast#protocols)
 
 Please first refer to the general
-[dfuse contribution guide](https://github.com/dfuse-io/dfuse/blob/master/CONTRIBUTING.md),
+[dfuse contribution guide](https://github.com/streamingfast/streamingfast/blob/master/CONTRIBUTING.md),
 if you wish to contribute to this code base.
 
 ## License
