@@ -539,7 +539,11 @@ message ActionTrace {
   uint64 block_num = 7;
   string producer_block_id = 8;
   google.protobuf.Timestamp block_time = 9;
+  // AccountDiskDeltas has been added in EOSIO 2.1.x for DISK resource, which was later removed but the field make it through
+  // we keep it in reserved for the future maybe.
+  repeated AccountDelta account_disk_deltas = 40;
   repeated AccountRAMDelta account_ram_deltas = 10;
+
   Exception exception = 15;
   uint64 error_code = 20; // https://github.com/EOSIO/eos/pull/7108
   uint32 action_ordinal = 16;
@@ -574,6 +578,11 @@ message AuthSequence {
 }
 
 message AccountRAMDelta {
+  string account = 1;
+  int64 delta = 2;
+}
+
+message AccountDelta {
   string account = 1;
   int64 delta = 2;
 }
