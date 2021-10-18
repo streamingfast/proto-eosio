@@ -9,11 +9,21 @@ import "dfuse/eosio/codec/v1/codec.proto";
 service AccountHistory {
   rpc GetActions(GetActionsRequest) returns (stream ActionResponse);
 }
+service AccountContractHistory {
+  rpc GetAccountContractActions(GetTokenActionsRequest) returns (stream ActionResponse);
+}
 
 message GetActionsRequest {
   uint64 account = 1;
   uint32 limit = 2;
   Cursor cursor = 3;
+}
+
+message GetTokenActionsRequest {
+  uint64 account = 1;
+  uint64 contract = 2;
+  uint32 limit = 3;
+  Cursor cursor = 4;
 }
 
 message ActionResponse {
@@ -22,13 +32,14 @@ message ActionResponse {
   dfuse.eosio.codec.v1.ActionTrace action_trace = 2;
 }
 
+
 message ActionRow {
   uint32 version = 1;
   dfuse.eosio.codec.v1.ActionTrace action_trace = 2;
   uint64 last_deleted_seq = 3;
 }
 
-message ShardCheckpoint {
+message ShardCheckpoint {4
   uint64 initial_start_block = 1;
   uint64 target_stop_block = 2; // exclusive
   uint64 last_written_block_num = 3;
@@ -43,8 +54,8 @@ message Cursor {
   uint32 version = 1;
   uint32 magic = 2;  // fixed at 4374 = acth in l33t = account history
 
-  uint64 account = 3;
+  bytes key = 3;
 
-  uint32 shard_num = 4;
-  uint64 sequence_number = 5;
+  uint32 shard_num = 5;
+  uint64 sequence_number = 6;
 }
