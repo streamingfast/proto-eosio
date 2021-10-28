@@ -694,11 +694,33 @@ message KVOp {
 
 
 message RAMOp {
+  // Operation is the legacy operation tag that we used initially. This is replaced
+  // by a combination of `Namespce` and `Action`.
+  //
+  // Deprecated: Use `Namespace` and `Action` instead to determine what the RAM operation represents
   Operation operation = 1;
   uint32 action_index = 2;
   string payer = 3;
   int64 delta = 4;
   uint64 usage = 5;
+
+  // Namespace representing the category the RAM operation belong to, like
+  // account, table_row, table, etc.
+  //
+  // This coupled with `action` replaces the `operation` field.
+  Namespace namespace = 6;
+
+  // Namespace representing the action the RAM operation did, like
+  // add, delete or remove an object.
+  //
+  // This coupled with `action` replaces the `operation` field.
+  Action action = 7;
+
+  // UniqueKey gives a unique key to the operation, this unique key is opaque,
+  // does not necessarly represents anything and should uniquely represents the
+  // RAM Operation within a given timeframe of block (a key should never overlap
+  // any other keys (per namespace), on any blocks span).
+  string unique_key = 8;
 
   enum Operation {
     OPERATION_UNKNOWN = 0;
@@ -726,12 +748,12 @@ message RAMOp {
     OPERATION_UNLINKAUTH = 22;
     OPERATION_UPDATEAUTH_CREATE = 23;
     OPERATION_UPDATEAUTH_UPDATE = 24;
-  }
 
-  // To eventually replace `operation`.
-  Namespace namespace = 6;
-  string unique_key = 8;
-  Action action = 7;
+    // For newer RAM Ops that are registered by Deep Mind, their `Operation` value will be
+    // Deprecated until we remove the operation completely. Use instead the `Namespace`
+    // and `Action` fields to take a decision about what the RAM operation is doing.
+    OPERATION_DEPRECATED = 25;
+  }
 
   enum Namespace {
     NAMESPACE_UNKNOWN = 0;
@@ -744,6 +766,9 @@ message RAMOp {
     NAMESPACE_SECONDARY_INDEX = 7;
     NAMESPACE_TABLE = 8;
     NAMESPACE_TABLE_ROW = 9;
+
+    // Added in EOSIO 2.1.x
+    NAMESPACE_KV = 10;
   }
 
   enum Action {
