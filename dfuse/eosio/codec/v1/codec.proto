@@ -658,9 +658,6 @@ message KVOp {
   // - On an `insert` operation, `OldPayer` is unset (emtpy string).
   // - On an `update` operation, in stock 2.1.0 version is unset sadly (fix sent)
   // - On a `remove` operation, `OldPayer` is set to the last payer of the Key/Value pair.
-  //
-  // **Important** due to a oversight in deep mind instrumentation in 2.1.0, the `OldPayer`
-  // is left unset.
   string old_payer = 5;
 
   // NewPayer is the current payer of the Key/Value pair.
