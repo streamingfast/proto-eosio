@@ -39,7 +39,7 @@ message ActionRow {
   uint64 last_deleted_seq = 3;
 }
 
-message ShardCheckpoint {4
+message ShardCheckpoint {
   uint64 initial_start_block = 1;
   uint64 target_stop_block = 2; // exclusive
   uint64 last_written_block_num = 3;
